@@ -1,64 +1,54 @@
+
 <section class="text-gray-400 bg-blancoroto body-font">
     <div class="container px-5 py-24 mx-auto">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Categorías</h1>
-      <div class="flex flex-wrap -m-4">
-        <!-- Categoría 1 -->
-        <div class="xl:w-1/4 md:w-1/2 p-4">
-          <a href="/categoria/1" class="block bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative h-40">
-              <img alt="category-1" class="object-cover object-center w-full h-full" src="https://dummyimage.com/400x400">
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <h2 class="text-white text-2xl font-bold">Categoría 1</h2>
-              </div>
-            </div>
-            <div class="p-4">
-              <p class="text-gray-600">Descripción breve de la categoría 1.</p>
-            </div>
-          </a>
+        <h1 class="text-3xl text-center font-bold text-gray-900 mb-6">Categorías</h1>
+        
+        <!-- Barra de Búsqueda -->
+        <div class="mb-6">
+            <input 
+                type="text" 
+                placeholder="Buscar productos..." 
+                class="w-full p-2 border border-gray-300 rounded-lg"
+                [(ngModel)]="searchText" 
+                (ngModelChange)="filterProducts()"
+            />
         </div>
-        <!-- Categoría 2 -->
-        <div class="xl:w-1/4 md:w-1/2 p-4">
-          <a href="/categoria/2" class="block bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative h-40">
-              <img alt="category-2" class="object-cover object-center w-full h-full" src="https://dummyimage.com/400x400">
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <h2 class="text-white text-2xl font-bold">Categoría 2</h2>
-              </div>
+        
+        
+        <!-- Categorías -->
+        <div class="flex flex-wrap gap-4">
+            <div *ngFor="let categoria of filteredCategorias" class="w-1/6 p-4 hover:scale-105 transition-transform duration-300 ease-in-out">
+                <a class="block bg-white rounded-lg shadow-lg overflow-hidden transform hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    <div class="relative h-32 bg-cover bg-center" [ngStyle]="{'background-image': 'url(' + categoria.cat_url + ')'}">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <h2 class="text-white text-2xl font-bold">{{ categoria.nombre_cat }}</h2>
+                        </div>
+                    </div>
+                </a>
             </div>
-            <div class="p-4">
-              <p class="text-gray-600">Descripción breve de la categoría 2.</p>
-            </div>
-          </a>
-        </div>
-        <!-- Categoría 3 -->
-        <div class="xl:w-1/4 md:w-1/2 p-4">
-          <a href="/categoria/3" class="block bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative h-40">
-              <img alt="category-3" class="object-cover object-center w-full h-full" src="https://dummyimage.com/400x400">
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <h2 class="text-white text-2xl font-bold">Categoría 3</h2>
-              </div>
-            </div>
-            <div class="p-4">
-              <p class="text-gray-600">Descripción breve de la categoría 3.</p>
-            </div>
-          </a>
-        </div>
-        <!-- Categoría 4 -->
-        <div class="xl:w-1/4 md:w-1/2 p-4">
-          <a href="/categoria/4" class="block bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="relative h-40">
-              <img alt="category-4" class="object-cover object-center w-full h-full" src="https://dummyimage.com/400x400">
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <h2 class="text-white text-2xl font-bold">Categoría 4</h2>
-              </div>
-            </div>
-            <div class="p-4">
-              <p class="text-gray-600">Descripción breve de la categoría 4.</p>
-            </div>
-          </a>
-        </div>
-      </div>
+        </div>  
     </div>
-  </section>
-  
+    <!-- Productos de la Categoría Seleccionada -->
+    <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Productos de la Categoría Seleccionada</h2>
+    
+    <div *ngIf="productos">
+        <div class="flex flex-wrap -m-4 mt-4">
+            <div *ngFor="let producto of filteredProducts" class="xl:w-1/4 md:w-1/2 p-4">
+                <div class="block bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="relative h-40">
+                        <img alt="producto" class="object-contain object-center w-full h-full" [src]="producto.pro_url">
+                    </div>
+                    <div class="mt-4 text-center">
+                        <h3 class="text-red-600 title-font text-lg font-medium">{{ producto.nombre_prod }}</h3>
+                        <p class="text-gray-600 text-xs tracking-widest title-font mb-1">{{ producto.descripcion_prod }}</p>
+                        <p class="text-red-600 text-lg font-bold">S/. {{ producto.precio_prod }}</p>
+                        <p class="text-gray-600 text-sm mt-2">Stock: <span class="text-green-600 font-bold">{{ producto.stock_prod }}</span></p>
+                        <p class="text-gray-600 text-sm mt-1">Categoría: <span class="font-semibold">{{ producto.categoria.nombre_cat }}</span></p>
+                        <p class="text-gray-600 text-sm mt-1">Proveedor: <span class="font-semibold">{{ producto.proveedores.nombre_proveedor }}</span></p>
+                        <button class="mt-2 mb-4 px-4 py-2 bg-red-500 hover:bg-red-700 text-white font-bold rounded-lg transition duration-300 ease-in-out">Comprar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
