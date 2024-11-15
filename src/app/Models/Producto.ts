@@ -1,5 +1,5 @@
 import { Categoria } from "./Categoria";
-import { Oferta } from "./Ofertas";
+import { Ofertas} from "./Ofertas";
 import {Proveedores } from "./Proveedores";
 
 export class Producto {
@@ -11,9 +11,9 @@ export class Producto {
   pro_url: string;
   categoria: Categoria;
   proveedores: Proveedores;
-  oferta: Oferta;
+  ofertas: Ofertas;
 
-  constructor(id_producto: number, nombre_prod: string, descripcion_prod: string, precio_prod: number, stock_prod: number, pro_url: string, categoria: Categoria, proveedor: Proveedores, oferta: Oferta) {
+  constructor(id_producto: number, nombre_prod: string, descripcion_prod: string, precio_prod: number, stock_prod: number, pro_url: string, categoria: Categoria, proveedor: Proveedores, ofertas: Ofertas) {
     this.id_producto = id_producto;
     this.nombre_prod = nombre_prod;
     this.descripcion_prod = descripcion_prod;
@@ -22,6 +22,6 @@ export class Producto {
     this.pro_url = pro_url;
     this.categoria = categoria;
     this.proveedores = proveedor;
-    this.oferta = oferta;
+    this.ofertas = ofertas;
   }
 }

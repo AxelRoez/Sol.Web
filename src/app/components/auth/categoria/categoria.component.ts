@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Categoria } from '../../../Models/Categoria';
 import { Producto } from '../../../Models/Producto';
 import { CategoriaService } from '../../../Services/categoria.service';
-import { ProductoService } from '../../../Services/producto.service'; // Servicio para obtener productos
+import { ProductoService } from '../../../Services/producto.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Proveedores } from '../../../Models/Proveedores';
@@ -10,73 +10,84 @@ import { ProveedoresService } from '../../../Services/proveedores.service';
 
 @Component({
   selector: 'app-categoria',
-  standalone: true,             // Esto indica que es un componente standalone
+  standalone: true,             
   templateUrl: './categoria.component.html',
-  imports: [CommonModule,FormsModule],       // Importa CommonModule aquí
+  imports: [CommonModule, FormsModule],       
   styleUrls: ['./categoria.component.css']
 })
 export class CategoriaComponent implements OnInit {
-  categorias: Categoria[] = [];  // Array de categorías
-  proveedores: Proveedores[] = [];           // Array de proveedores
-  productos: Producto[] = [];    // Array de productos
-  filteredProveedores: Proveedores[] = [];   // Proveedores filtrados
-  filteredCategorias: Categoria[] = [];  // Categorías filtradas
-  filteredProducts: Producto[] = [];     // Productos filtrados
-  searchText: string = '';       // Texto de búsqueda
+  categorias: Categoria[] = [];
+  proveedores: Proveedores[] = [];
+  productos: Producto[] = [];
+  filteredCategorias: Categoria[] = [];
+  filteredProducts: Producto[] = [];
+  searchText: string = '';
+  selectedCategory: Categoria | null = null;
 
   constructor(
     private categoriaService: CategoriaService,
     private proveedoresService: ProveedoresService,
     private productoService: ProductoService
-      
   ) {}
 
   ngOnInit(): void {
-    this.listaCategoria();        // Obtener categorías al iniciar el componente
+    this.listaCategoria();
     this.listaProveedores();
-    this.listaProductos();        // Obtener productos
-    
+    this.listaProductos();
   }
 
-  // Método para obtener las categorías
   private listaCategoria(): void {
     this.categoriaService.listaCategoriaArrayList().subscribe(data => {
       this.categorias = data;
-      this.filteredCategorias = data;  // Inicializamos las categorías filtradas
+      this.filteredCategorias = data;
     });
   }
 
   private listaProveedores(): void {
     this.proveedoresService.listaProveedoresArrayList().subscribe(data => {
       this.proveedores = data;
-      this.filteredProveedores = data;  // Inicializamos los proveedores filtrados
     });
   }
-  
 
-  // Método para obtener todos los productos
   private listaProductos(): void {
     this.productoService.listaProductoArrayList().subscribe(data => {
       this.productos = data;
-      this.filteredProducts = data;  // Inicializamos los productos filtrados
+      this.filteredProducts = data;
     });
   }
 
   // Método para filtrar productos por nombre
-  filterProducts(): void {
-    if (this.searchText.trim() === '') {
-      this.filteredProducts = this.productos;  // Si no hay texto de búsqueda, mostrar todos los productos
-    } else {
-      this.filteredProducts = this.productos.filter(producto =>
-        producto.nombre_prod.toLowerCase().includes(this.searchText.toLowerCase())  // Filtrar por nombre
-      );
-    }
+  // Método para filtrar productos por nombre
+filterProducts(): void {
+  let filtered = this.productos;
+
+  // Verifica si `selectedCategory` no es `null` antes de filtrar
+  if (this.selectedCategory?.id_categoria) {
+    filtered = filtered.filter(producto => 
+      producto.categoria.id_categoria === this.selectedCategory!.id_categoria
+    );
   }
 
-  // Método para filtrar productos por categoría
-  filterByCategory(categoria: Categoria): void {
-    this.filteredProducts = this.productos.filter(producto =>
-      producto.categoria.id_categoria === categoria.id_categoria  // Filtrar productos que pertenecen a la categoría seleccionada
+  // Filtrar productos por el texto de búsqueda
+  if (this.searchText.trim() !== '') {
+    filtered = filtered.filter(producto => 
+      producto.nombre_prod.toLowerCase().includes(this.searchText.toLowerCase())
     );
+  }
+
+  this.filteredProducts = filtered;
+}
+
+
+  // Método para alternar el filtro de categoría
+  filterByCategory(categoria: Categoria): void {
+    if (this.selectedCategory && this.selectedCategory.id_categoria === categoria.id_categoria) {
+      // Si ya está seleccionada la misma categoría, deseleccionar y mostrar todos
+      this.selectedCategory = null;
+    } else {
+      // Seleccionar nueva categoría
+      this.selectedCategory = categoria;
+    }
+    this.filterProducts();
   }
 }

@@ -1,4 +1,4 @@
-export class Oferta {
+export class Ofertas {
   id_oferta: number;
   porcentaje_descuento: number;
   fecha_inicio: Date;

@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductoService {
+  obtenerProductosConDescuento() {
+    throw new Error('Method not implemented.');
+  }
   private baseURL="http://localhost:8080/Productos";
   constructor(private httpClient: HttpClient){}
   listaProductoArrayList():Observable<Producto[]>{
